@@ -9,10 +9,19 @@ django.setup()
 from django.contrib.auth.models import User
 from operations.models import ItemMaster, StockRegister, DailyProduction, DailyExpense, Employee, DailyAttendance
 
-# 1. Superuser
+# 1. Administrator User (Single Role)
 if not User.objects.filter(username='admin').exists():
     User.objects.create_superuser('admin', 'admin@aaradhyaenertech.com', 'admin123')
-    print("Created superuser: admin / admin123")
+    print("Created administrator superuser: admin / admin123")
+else:
+    u = User.objects.get(username='admin')
+    u.is_superuser = True
+    u.is_staff = True
+    u.set_password('admin123')
+    u.save()
+    print("Updated administrator: admin / admin123")
+User.objects.filter(username='staff').delete()
+User.objects.filter(username='superuser').delete()
 
 # 2. Seed Item Master
 raw_materials = [
